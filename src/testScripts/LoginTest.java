@@ -21,9 +21,8 @@ public class LoginTest {
 		String expetedTitle = "Employee Management";
 		String actualTitle = loginPage.getPageTitle();
 		
-		System.out.println("123");
-		System.out.println("aaradhy_new" );
-		System.out.println("45789");
+		System.out.println("Aaradhy");
+		System.out.println("mikku");
 		
 		Assert.assertEquals(actualTitle, expetedTitle, "Expected title was " + expetedTitle + " but actual title was " + actualTitle);
 		
