@@ -1,5 +1,7 @@
 package base;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
@@ -7,6 +9,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -16,9 +19,10 @@ public class PredefinedActions {
 
 	protected static WebDriver driver;
 	static WebDriverWait wait;
+	private static Actions actions;
 	
 	protected PredefinedActions() {
-		
+		 
 	}
 	
 		public static void start(String url) {
@@ -27,7 +31,8 @@ public class PredefinedActions {
 		driver.manage().window().maximize();
 		driver.get(url);
 		driver.manage().timeouts().implicitlyWait(2000,TimeUnit.SECONDS);
-		
+		actions = new Actions(driver);
+		wait = new WebDriverWait(driver, 60);
 	}
 	
 	protected WebElement getElement(String locatorType, String locatorValue,boolean isWaitRequired) {
@@ -94,12 +99,21 @@ public class PredefinedActions {
 		
 	}
 	
+	protected boolean waitForVisibilityOfElement(WebElement e) {
+		try {
+			wait.until(ExpectedConditions.visibilityOf(e));
+		}catch(Exception exception) {
+			return false;
+		}
+		return true;
+	}
+		
 	protected void setText(WebElement e, String text) {
 		scrollToElement(e);
 		if(e.isEnabled())
 			e.sendKeys(text);
 		else
-			throw new ElementNotEnabledException(text + " can't be entered as ele,ent is not enabled");
+			throw new ElementNotEnabledException(text + " can't be entered as element is not enabled");
 	}
 	
 	protected void setText(String locatorType, String locatorValue, boolean isWaitRequired, String text) {
@@ -137,6 +151,20 @@ public class PredefinedActions {
 	public String getPageURL() {
 		return driver.getCurrentUrl();
 	}
+	
+	protected void mouseHoverOnElement(WebElement e) {
+		actions.moveToElement(e).build().perform();
+	}
+	
+	protected List<String> getListOfWebElementText(List<WebElement> list){
+		List<String> listOfWebElementText= new ArrayList<String> ();
+		for(WebElement e: list) {
+			listOfWebElementText.add(e.getText());
+	}
+		return listOfWebElementText;
+		
+	}
+	
 	public static void closeBrowser() {
 		driver.close();
 	}
